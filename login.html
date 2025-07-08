@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Login/Register - Ecoself-Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+            .container {
+                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(10px);
+            }
+        }
+        
+        /* 对不支持 backdrop-filter 的浏览器使用备选方案 */
+        @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+            .container {
+                background-color: rgba(255, 255, 255, 0.95);
+            }
+        }
+
+        :root {
+            /* 基础颜色 */
+            --primary-color: #FFF5F2;      /* 更淡的米粉色，与about一致 */
+            --secondary-color: #FFF5F2;    /* 更淡的粉色，与about一致 */
+            --accent-color: #946B54;       /* 深金褐色，偏棕色，与calendar强调色一致 */
+            --text-color: #6B5A50;         /* 主要文字色，与about一致 */
+            --background-color: #FFFFFF;
+            --border-color: #F8EFEB;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --border-radius: 16px;
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            --transition-time: 0.3s;
+            --gradient-primary: linear-gradient(135deg, var(--background-color) 0%, var(--primary-color) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--gradient-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            color: var(--text-color);
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 0.8rem;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color var(--transition-time);
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all var(--transition-time);
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 4px rgba(212, 167, 132, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group:focus-within label {
+            color: var(--secondary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--transition-time);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background: var(--secondary-color);
+            box-shadow: 0 5px 15px rgba(148, 107, 84, 0.15);
+        }
+
+        button:hover::before {
+            transform: translateX(100%);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .toggle-form::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color) 0%, var(--secondary-color) 100%);
+        }
+
+        .toggle-form a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-time);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: linear-gradient(to right, transparent 50%, var(--primary-color) 50%);
+            background-size: 200% 100%;
+            background-position: left bottom;
+        }
+
+        .toggle-form a:hover {
+            color: var(--secondary-color);
+            background-position: right bottom;
+        }
+
+        #registerForm {
+            display: none;
+        }
+
+        .form-container {
+            opacity: 1;
+            transition: all 0.4s ease;
+        }
+
+        .form-container.fade-out {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .form-active {
+            animation: slideIn 0.4s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 添加响应式设计 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 2rem;
+                margin: 1rem;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+
+            input {
+                font-size: 0.95rem;
+            }
+
+            button {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 登录表单 -->
+        <form id="loginForm" class="form-container">
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Log in to your account to start recording</p>
+            
+            <div class="form-group">
+                <label for="loginEmail">Email Address</label>
+                <input type="email" id="loginEmail" required placeholder="Please enter your email address">
+            </div>
+            
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required placeholder="Please enter your password">
+            </div>
+            
+            <button type="submit">Log In</button>
+            
+            <div class="toggle-form">
+                <a href="#" id="showRegister">Don't have an account? Register now</a>
+            </div>
+        </form>
+
+        <!-- 注册表单 -->
+        <form id="registerForm" class="form-container">
+            <h1>Create Account</h1>
+            <p class="subtitle">Register a new account to start your journey of self-improvement</p>
+            
+            <div class="form-group">
+                <label for="registerEmail">Email Address</label>
+                <input type="email" id="registerEmail" required placeholder="Please enter your email address">
+            </div>
+            
+            <div class="form-group">
+                <label for="registerPassword">Set Password</label>
+                <input type="password" id="registerPassword" required placeholder="Please set a password (6-20 characters)">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" required placeholder="Please re-enter your password">
+            </div>
+            
+            <button type="submit">Register</button>
+            
+            <div class="toggle-form">
+                <a href="#" id="showLogin">Already have an account? Log in now</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 用户管理系统
+        const UserManager = {
+            // 获取所有注册用户
+            getAllUsers() {
+                const users = localStorage.getItem('registeredUsers');
+                return users ? JSON.parse(users) : {};
+            },
+            
+            // 保存所有用户数据
+            saveAllUsers(users) {
+                localStorage.setItem('registeredUsers', JSON.stringify(users));
+            },
+            
+            // 注册新用户
+            registerUser(email, password) {
+                const users = this.getAllUsers();
+                
+                // 检查邮箱是否已存在
+                if (users[email]) {
+                    throw new Error('This email address is already registered');
+                }
+                
+                // 创建新用户
+                users[email] = {
+                    password: password,
+                    createdAt: new Date().toISOString(),
+                    userData: {
+                        todos: {},
+                        completed: {},
+                        bookAmount: 0
+                    }
+                };
+                
+                this.saveAllUsers(users);
+                return true;
+            },
+            
+            // 验证用户登录
+            loginUser(email, password) {
+                const users = this.getAllUsers();
+                
+                // 检查用户是否存在
+                if (!users[email]) {
+                    throw new Error('Account does not exist, please register first');
+                }
+                
+                // 验证密码
+                if (users[email].password !== password) {
+                    throw new Error('Incorrect password, please try again');
+                }
+                
+                return true;
+            },
+            
+            // 保存当前登录用户
+            setCurrentUser(email) {
+                localStorage.setItem('currentUser', email);
+                localStorage.setItem('userToken', 'token-' + email + '-' + Date.now());
+            },
+            
+            // 获取当前用户
+            getCurrentUser() {
+                return localStorage.getItem('currentUser');
+            },
+            
+            // 检查是否已登录
+            isLoggedIn() {
+                const user = localStorage.getItem('currentUser');
+                const token = localStorage.getItem('userToken');
+                return user && token;
+            },
+            
+            // 登出
+            logout() {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('userToken');
+            }
+        };
+
+        // 表单切换逻辑
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+
+        // 添加成功提示函数
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.style.color = 'var(--success-color)';
+            successDiv.style.padding = '10px';
+            successDiv.style.marginTop = '10px';
+            successDiv.style.borderRadius = 'var(--border-radius)';
+            successDiv.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+            successDiv.textContent = message;
+            
+            // 移除之前的消息
+            const oldMessage = document.querySelector('.success-message, .error-message');
+            if (oldMessage) {
+                oldMessage.remove();
+            }
+            
+            // 显示新消息
+            const activeForm = document.querySelector('form:not([style*="display: none"])');
+            activeForm.appendChild(successDiv);
+
+            // 3秒后自动消失
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        // 添加错误提示函数
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.style.color = 'var(--error-color)';
+            errorDiv.style.padding = '10px';
+            errorDiv.style.marginTop = '10px';
+            errorDiv.style.borderRadius = 'var(--border-radius)';
+            errorDiv.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+            errorDiv.textContent = message;
+            
+            // 移除之前的消息
+            const oldMessage = document.querySelector('.error-message, .success-message');
+            if (oldMessage) {
+                oldMessage.remove();
+            }
+            
+            // 显示新消息
+            const activeForm = document.querySelector('form:not([style*="display: none"])');
+            activeForm.appendChild(errorDiv);
+
+            // 3秒后自动消失
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
+        function switchForm(hideForm, showForm) {
+            hideForm.classList.add('fade-out');
+            setTimeout(() => {
+                hideForm.style.display = 'none';
+                hideForm.classList.remove('fade-out');
+                showForm.style.display = 'block';
+                showForm.classList.add('form-active');
+            }, 300);
+        }
+
+        showRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchForm(loginForm, registerForm);
+        });
+
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchForm(registerForm, loginForm);
+        });
+
+        // 注册表单处理
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // 验证邮箱格式
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
+
+            // 验证密码长度
+            if (password.length < 6 || password.length > 20) {
+                showError('Password length should be between 6 and 20 characters');
+                return;
+            }
+
+            // 验证两次密码是否一致
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            try {
+                // 注册新用户
+                UserManager.registerUser(email, password);
+                showSuccess('Registration successful! You can now log in.');
+                
+                // 清空表单
+                document.getElementById('registerEmail').value = '';
+                document.getElementById('registerPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+                // 2秒后自动切换到登录表单
+                setTimeout(() => {
+                    switchForm(registerForm, loginForm);
+                }, 2000);
+                
+            } catch (error) {
+                showError(error.message);
+                console.error('Registration error:', error);
+            }
+        });
+
+        // 登录表单处理
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // 基本验证
+            if (!email || !password) {
+                showError('Please enter email and password');
+                return;
+            }
+
+            try {
+                // 验证用户登录
+                UserManager.loginUser(email, password);
+                
+                // 设置当前登录用户
+                UserManager.setCurrentUser(email);
+                
+                showSuccess('Login successful! Redirecting...');
+                
+                // 1秒后跳转到todo list页面
+                setTimeout(() => {
+                    window.location.href = 'calendar.html';
+                }, 1000);
+                
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+    </script>
+</body>
+</html> 

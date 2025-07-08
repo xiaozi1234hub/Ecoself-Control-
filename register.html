@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>注册 - Ecoself-Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login.css">
+    <style>
+        :root {
+            --primary-color: #FFF5F2;
+            --secondary-color: #D4A784;
+            --accent-color: #946B54;
+            --text-color: #6B5A50;
+            --background-color: #FFFFFF;
+            --border-color: #F8EFEB;
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            --border-radius: 16px;
+            --transition-time: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, var(--background-color) 0%, var(--primary-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all var(--transition-time);
+            background: var(--background-color);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 4px rgba(212, 167, 132, 0.1);
+        }
+
+        .password-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            opacity: 0.6;
+            transition: opacity var(--transition-time);
+        }
+
+        .toggle-password:hover {
+            opacity: 1;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--transition-time);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .register-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-time);
+        }
+
+        .register-link:hover {
+            color: var(--secondary-color);
+        }
+
+        .error-message {
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            .login-card {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <h1>创建账号</h1>
+            <p class="subtitle">开启你的自我提升之旅</p>
+
+            <form id="registerForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">邮箱地址</label>
+                    <input type="email" id="email" name="email" required placeholder="请输入邮箱地址">
+                </div>
+                <div class="form-group">
+                    <label for="password">设置密码</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required placeholder="请设置6-20位密码">
+                        <button type="button" class="toggle-password" onclick="togglePassword(this)">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <div class="password-input">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="请再次输入密码">
+                        <button type="button" class="toggle-password" onclick="togglePassword(this)">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn">注册</button>
+            </form>
+
+            <div class="login-footer">
+                <p>已有账号？<a href="login.html" class="register-link">立即登录</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            const oldError = document.querySelector('.error-message');
+            if (oldError) {
+                oldError.remove();
+            }
+            
+            document.querySelector('.login-card').appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
+        function togglePassword(button) {
+            const input = button.parentElement.querySelector('input');
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.querySelector('.eye-icon').style.opacity = '1';
+            } else {
+                input.type = 'password';
+                button.querySelector('.eye-icon').style.opacity = '0.6';
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('请输入正确的邮箱地址');
+                return;
+            }
+
+            if (password.length < 6 || password.length > 20) {
+                showError('密码长度应为6-20位');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('两次输入的密码不一致');
+                return;
+            }
+
+            // 保存用户信息到本地存储
+            localStorage.setItem('currentUser', email);
+            localStorage.setItem('userToken', 'temp-token-' + Date.now());
+            
+            // 跳转到日历页面
+            window.location.href = 'calendar.html';
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Calendar - Ecoself-Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        :root {
+            --primary-bg: #FFF5F2;      /* 更淡的米粉色，与about一致 */
+            --secondary-bg: #FFF5F2;    /* 更淡的粉色，与about一致 */
+            --primary: #D4A784;         /* 主要色：与about页面呼应的金色 */
+            --secondary: #E8D3B9;       /* 次要色：浅金色 */
+            --accent: #946B54;          /* 强调色：深金褐色 */
+            --text-primary: #6B5A50;    /* 主要文字：与about页面一致 */
+            --text-secondary: #B08B57;  /* 次要文字：金色 */
+            --white: #FFFFFF;           /* 纯白色 */
+            --section-padding: 2rem;    /* 添加内边距变量 */
+            --border-radius: 20px;      /* 添加圆角变量 */
+            --box-shadow: 0 10px 25px rgba(188, 143, 143, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding-top: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(188, 143, 143, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header h2 {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(232, 184, 155, 0.3);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all var(--transition-time);
+            font-size: 0.9rem;
+            position: relative;
+            background: white;
+            min-height: 40px;
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .calendar-day.past {
+            color: #999;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: default;
+        }
+
+        .calendar-day.past:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .calendar-day:not(.empty):not(.past):hover {
+            background: var(--primary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(232, 184, 155, 0.2);
+        }
+
+        .calendar-day.today {
+            background: var(--primary-color);
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .calendar-day.completed {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .calendar-day.completed:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 184, 155, 0.3);
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.4rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 2px 4px rgba(232, 184, 155, 0.1);
+        }
+
+        .nav-button {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(188, 143, 143, 0.2);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 380px 1fr 300px;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            min-height: calc(100vh - 4rem);
+        }
+
+        .calendar-section, .todo-section, .book-section {
+            background: white;
+            padding: var(--section-padding);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(232, 184, 155, 0.2);
+            margin-top: 1rem;
+        }
+
+        .selectors-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .selector-label {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .year-selector, .month-selector {
+            width: 100%;
+        }
+
+        select#yearSelector, select#monthSelector {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-bottom: 1px solid #DEB887;
+            font-size: 1rem;
+            color: var(--text-primary);
+            background: transparent;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            text-align: center;
+        }
+
+        select#yearSelector:hover, select#monthSelector:hover {
+            border-bottom-color: #BC8F8F;
+        }
+
+        select#yearSelector:focus, select#monthSelector:focus {
+            outline: none;
+            border-bottom-color: #BC8F8F;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            margin: 0.8rem 0;
+            font-weight: 500;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            background: var(--primary-color);
+            padding: 0.8rem 0;
+            border-radius: var(--border-radius);
+        }
+
+        .todo-list-container {
+            flex: 1;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+            padding-right: 0.5rem;
+        }
+
+        .todo-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .todo-list-container::-webkit-scrollbar-track {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .todo-list-container::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 3px;
+        }
+
+        .todo-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .todo-list-header h2 {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            font-weight: normal;
+        }
+
+        .selected-date {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: normal;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(232, 184, 155, 0.3);
+            border-radius: var(--border-radius);
+            margin-bottom: 0.8rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            border-color: var(--secondary-color);
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(232, 184, 155, 0.2);
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            border: 2px solid var(--secondary);
+            border-radius: 4px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            position: relative;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-right: 10px;
+            background-color: var(--white);
+        }
+
+        .todo-checkbox:checked {
+            background: var(--secondary);
+        }
+
+        .todo-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+        }
+
+        .todo-text {
+            flex: 1;
+            border: none;
+            padding: 0.5rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            background: transparent;
+            border-radius: 4px;
+            transition: all var(--transition-time);
+        }
+
+        .todo-text:focus {
+            outline: none;
+            background: var(--primary-color);
+        }
+
+        .todo-date {
+            font-size: 0.85rem;
+            color: #666;
+            padding: 0.3rem 0.6rem;
+            background: var(--primary-color);
+            border-radius: 12px;
+        }
+
+        .book-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .book-stack {
+            width: 70px;
+            min-height: 40px;
+            margin: 1.5rem auto 0 auto;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .book-item {
+            width: 60px;
+            height: 18px;
+            background: #F5DEB3;
+            border: 1px solid #BC8F8F;
+            border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+
+        .book-stats {
+            font-size: 1rem;
+            background: var(--primary-bg);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .book-stats p {
+            margin: 0.8rem 0;
+            color: var(--text-primary);
+        }
+
+        .book-stats span {
+            font-weight: 500;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+                gap: 1.5rem;
+            }
+
+            .book-section {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+            }
+
+            .book-stack {
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                margin: 0;
+            }
+
+            .book-section {
+                flex-direction: column;
+            }
+
+            .book-stack {
+                margin: 1rem auto;
+            }
+        }
+
+        .streak-container {
+            background: linear-gradient(135deg, rgba(255, 245, 238, 0.4) 0%, rgba(255, 240, 245, 0.4) 100%);
+            padding: 0.8rem;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(212, 167, 132, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 167, 132, 0.15);
+            transition: transform 0.3s ease;
+            max-width: 280px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .streak-title {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.1rem;
+            font-weight: normal;
+            opacity: 0.9;
+        }
+
+        .streak-count {
+            font-size: 2rem;
+            color: var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            margin: 0;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        .streak-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(212, 167, 132, 0.1);
+            border-radius: 10px;
+            margin: 0.6rem 0 0;
+            overflow: hidden;
+        }
+
+        .streak-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .streak-bonus {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-top: 0.4rem;
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .streak-bonus.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .streak-bonus::before {
+            content: '';
+            margin-right: 0;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .celebrate {
+            animation: celebrate 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .calendar-day.selected {
+            background: var(--accent);
+            color: var(--white);
+            border-color: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(188, 143, 143, 0.3);
+        }
+
+        .calendar-day.selected:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(188, 143, 143, 0.3);
+        }
+
+        #selectedDateDisplay {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .add-todo-btn {
+            background: none;
+            border: 1px solid #DEB887;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-todo-btn:hover {
+            background: #FFF5EE;
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .todo-section {
+            position: relative;
+        }
+
+        .todo-item {
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(188, 143, 143, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .todo-text {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid rgba(188, 143, 143, 0.2);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .todo-text:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(188, 143, 143, 0.1);
+        }
+
+        .book-shelf {
+            width: 120px;
+            height: 200px;
+            background: #8B4513;
+            border: 2px solid #A0522D;
+            border-radius: 5px;
+            margin: 1rem auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px;
+        }
+        .shelf {
+            width: 100%;
+            height: 10px;
+            background: #DEB887;
+            border-radius: 2px;
+        }
+
+        @keyframes fallIn {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .encouragement {
+            font-size: 1.5rem;
+            color: #BC8F8F;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .book-icon.animate {
+            animation: bounce-in 0.5s;
+        }
+        @keyframes bounce-in {
+            0% { transform: scale(0.2); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* 用户信息栏样式 */
+        .user-header {
+            background: var(--background);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+
+
+        .user-details h3 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        .user-details p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+  <body>
+    <!-- 用户信息栏 -->
+    <div class="user-header">
+        <div class="user-info">
+            <div class="user-details">
+                <h3 id="userName">User</h3>
+                <p>Welcome back to your todo list</p>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+    </div>
+
+    <div class="main-container">
+        <div class="calendar-section">
+            <div class="selectors-container">
+                <div class="year-selector">
+                    <select id="yearSelector" onchange="selectYear(this.value)"></select>
+                </div>
+                <div class="month-selector">
+                    <select id="monthSelector" onchange="selectMonth(this.value)"></select>
+                </div>
+            </div>
+            <div class="calendar-header">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+            </div>
+            <div id="calendar" class="calendar"></div>
+        </div>
+
+        <div class="todo-section">
+            <div class="todo-list-header">
+                <h2>To-Do List</h2>
+                <button class="add-todo-btn" onclick="addNewTodo()">
+                    <span class="btn-icon">+</span>
+                    <span>Add Task</span>
+                </button>
+            </div>
+            <div class="todo-list-container" id="todoListContainer"></div>
+        </div>
+
+        <div class="book-section">
+            <h2>Accumulated Books</h2>
+            <div class="streak-container">
+                <div class="streak-title">Consecutive Days Completed</div>
+                <div class="streak-count" id="streakCount">0</div>
+                <div class="streak-progress">
+                    <div class="streak-progress-bar" id="streakProgress"></div>
+                </div>
+                <div class="streak-bonus" id="streakBonus">+5 books</div>
+            </div>
+            <div class="book-stack" id="bookStack"></div>
+            <div class="book-stats">
+                <p>Total Books: <span id="totalBooks">0</span></p>
+            </div>
+            <div class="book-reward">
+                <div v-if="layer > 0" class="book-layer"></div>
+                <div class="book-icons">
+                    <div v-for="(book, i) in booksInCurrentLayer" :key="i" class="book-icon" :class="{ 'animate': isNewBook(i) }"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 修改 API 地址为相对路径
+        const API_BASE_URL = '/api';
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let selectedDate = null;
+        let userData = {
+            todos: {},
+            completed: {},
+            bookAmount: 0
+        };
+
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        // 用户管理系统（与登录页面保持一致）
+        const UserManager = {
+            // 获取所有注册用户
+            getAllUsers() {
+                const users = localStorage.getItem('registeredUsers');
+                return users ? JSON.parse(users) : {};
+            },
+            
+            // 保存所有用户数据
+            saveAllUsers(users) {
+                localStorage.setItem('registeredUsers', JSON.stringify(users));
+            },
+            
+            // 获取当前用户
+            getCurrentUser() {
+                return localStorage.getItem('currentUser');
+            },
+            
+            // 检查是否已登录
+            isLoggedIn() {
+                const user = localStorage.getItem('currentUser');
+                const token = localStorage.getItem('userToken');
+                return user && token;
+            },
+            
+            // 获取当前用户的数据
+            getCurrentUserData() {
+                const currentUser = this.getCurrentUser();
+                if (!currentUser) return null;
+                
+                const users = this.getAllUsers();
+                return users[currentUser] ? users[currentUser].userData : null;
+            },
+            
+            // 保存当前用户的数据
+            saveCurrentUserData(userData) {
+                const currentUser = this.getCurrentUser();
+                if (!currentUser) return false;
+                
+                const users = this.getAllUsers();
+                if (users[currentUser]) {
+                    users[currentUser].userData = userData;
+                    this.saveAllUsers(users);
+                    return true;
+                }
+                return false;
+            },
+            
+            // 登出
+            logout() {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('userToken');
+                window.location.href = 'login.html';
+            }
+        };
+
+        // 检查用户是否已登录
+        function checkAuth() {
+            if (!UserManager.isLoggedIn()) {
+                alert('Please log in first');
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // 从本地存储加载当前用户数据
+        function loadUserData() {
+            if (!checkAuth()) return;
+            
+            const currentUserData = UserManager.getCurrentUserData();
+            if (currentUserData) {
+                userData = currentUserData;
+            } else {
+                // 如果没有数据，初始化默认数据
+                userData = {
+                    todos: {},
+                    completed: {},
+                    bookAmount: 0
+                };
+                saveUserData(); // 保存初始数据
+            }
+            
+            updateBookDisplay();
+            generateCalendar(currentYear, currentMonth);
+        }
+
+        // 保存当前用户数据到本地存储
+        function saveUserData() {
+            if (!checkAuth()) return;
+            
+            try {
+                const success = UserManager.saveCurrentUserData(userData);
+                if (success) {
+                    console.log('用户数据保存成功:', userData);
+                } else {
+                    console.error('用户数据保存失败');
+                }
+            } catch (e) {
+                console.error('保存用户数据时出错:', e);
+            }
+        }
+
+        // 显示当前用户信息
+        function displayUserInfo() {
+            const currentUser = UserManager.getCurrentUser();
+            if (currentUser) {
+                const userName = document.getElementById('userName');
+                
+                if (userName) {
+                    userName.textContent = currentUser;
+                }
+            }
+        }
+
+        // 处理登出
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                UserManager.logout();
+            }
+        }
+
+        function updateYearSelector() {
+            const yearSelector = document.getElementById('yearSelector');
+            yearSelector.innerHTML = '';
+            for (let year = 2023; year <= 2223; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = `${year}`; // 只显示数字，无"年"字
+                if (year === currentYear) {
+                    option.selected = true;
+                }
+                yearSelector.appendChild(option);
+            }
+        }
+
+        function updateMonthSelector() {
+            const monthSelector = document.getElementById('monthSelector');
+            monthSelector.innerHTML = '';
+            monthNames.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                if (index === currentMonth) {
+                    option.selected = true;
+                }
+                monthSelector.appendChild(option);
+            });
+        }
+
+        function selectYear(year) {
+            currentYear = parseInt(year);
+            generateCalendar(currentYear, currentMonth);
+        }
+
+        function selectMonth(month) {
+            currentMonth = parseInt(month);
+            generateCalendar(currentYear, currentMonth);
+        }
+
+        function generateCalendar(year, month) {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startingDay = firstDay.getDay();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // 添加空白天数
+            for (let i = 0; i < startingDay; i++) {
+                calendar.appendChild(createDayElement(''));
+            }
+
+            // 添加日期
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                const dayElement = createDayElement(day, dateStr);
+                
+                const checkDate = new Date(year, month, day);
+                checkDate.setHours(0, 0, 0, 0);
+                
+                if (checkDate.getTime() === today.getTime()) {
+                    dayElement.classList.add('today');
+                }
+
+                if (userData.completed[dateStr]) {
+                    dayElement.classList.add('completed');
+                }
+
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        function createDayElement(day, dateStr = '') {
+            const div = document.createElement('div');
+            div.className = 'calendar-day';
+            div.textContent = day;
+
+            if (dateStr) {
+                div.setAttribute('data-date', dateStr);
+                div.addEventListener('click', () => selectDate(dateStr));
+                
+                if (dateStr === selectedDate) {
+                    div.classList.add('selected');
+                }
+            }
+
+            return div;
+        }
+
+        function selectDate(dateStr) {
+            selectedDate = dateStr;
+            const todos = userData.todos[dateStr] || [];
+            
+            // 获取当前日期
+            const today = new Date().toISOString().split('T')[0];
+            const isToday = dateStr === today;
+            
+            document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            const selectedDay = document.querySelector(`.calendar-day[data-date="${dateStr}"]`);
+            if (selectedDay) {
+                selectedDay.classList.add('selected');
+            }
+            
+            // 更新添加任务按钮的状态
+            const addTodoBtn = document.querySelector('.add-todo-btn');
+            if (addTodoBtn) {
+                addTodoBtn.disabled = !isToday;
+                addTodoBtn.style.opacity = isToday ? '1' : '0.5';
+                addTodoBtn.style.cursor = isToday ? 'pointer' : 'not-allowed';
+            }
+            
+            updateTodoList(dateStr, todos, isToday);
+        }
+
+        function updateTodoList(selectedDate, todos, isToday) {
+            const container = document.getElementById('todoListContainer');
+            container.innerHTML = '';
+            
+            if (!todos) {
+                const today = new Date().toISOString().split('T')[0];
+                selectDate(today);
+            } else {
+                todos.forEach(todo => {
+                    container.appendChild(createTodoElement(todo, selectedDate, isToday));
+                });
+            }
+        }
+
+        function createTodoElement(todo, dateStr, isToday) {
+            const div = document.createElement('div');
+            div.className = 'todo-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'todo-checkbox';
+            checkbox.checked = todo.completed || false;
+            checkbox.disabled = !isToday;
+            checkbox.addEventListener('change', () => {
+                if (!isToday) {
+                    checkbox.checked = !checkbox.checked; // 恢复原状态
+                    alert('Only today\'s tasks can be completed!');
+                    return;
+                }
+                todo.completed = checkbox.checked;
+                checkDateCompletion(dateStr);
+                saveUserData();
+                generateCalendar(currentYear, currentMonth);
+            });
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'todo-text';
+            input.value = todo.text || '';
+            input.placeholder = 'Enter task description';
+            input.readOnly = !isToday;
+            input.addEventListener('change', () => {
+                if (!isToday) {
+                    input.value = todo.text || ''; // 恢复原值
+                    return;
+                }
+                todo.text = input.value;
+                saveUserData();
+            });
+            
+            div.appendChild(checkbox);
+            div.appendChild(input);
+            
+            // 为非当天的任务添加特殊样式
+            if (!isToday) {
+                div.style.opacity = '0.7';
+                input.style.backgroundColor = 'transparent';
+                checkbox.style.cursor = 'not-allowed';
+                input.style.cursor = 'not-allowed';
+            }
+            
+            return div;
+        }
+
+        function addNewTodo() {
+            if (!checkAuth()) return;
+            
+            const today = new Date().toISOString().split('T')[0];
+            // 只允许添加今天的任务
+            if (selectedDate !== today) {
+                alert('Only today\'s tasks can be added!');
+                return;
+            }
+            
+            if (!userData.todos[today]) {
+                userData.todos[today] = [];
+            }
+            
+            const newTodo = {
+                id: Date.now(),
+                text: '',
+                completed: false
+            };
+            
+            userData.todos[today].push(newTodo);
+            saveUserData();
+            updateTodoList(today, userData.todos[today], true);
+        }
+
+        function checkDateCompletion(dateStr) {
+            if (!checkAuth()) return;
+            
+            const today = new Date().toISOString().split('T')[0];
+            // 只允许获得今天完成任务的奖励
+            if (dateStr !== today) {
+                return;
+            }
+            
+            const todos = userData.todos[dateStr];
+            if (!todos || todos.length === 0) return;
+
+            const allCompleted = todos.every(todo => todo.completed);
+            if (allCompleted && !userData.completed[dateStr]) {
+                userData.completed[dateStr] = true;
+                userData.bookAmount = (userData.bookAmount || 0) + 5;
+                saveUserData();
+                updateBookDisplay();
+                alert('Congratulations on completing all tasks today! 5 books have been donated to children in the mountains!');
+            }
+        }
+
+        function updateBookDisplay() {
+            const totalBooks = userData.bookAmount || 0;
+            const bookStack = document.getElementById('bookStack');
+            if (bookStack) {
+                bookStack.innerHTML = '';
+                for (let i = 0; i < totalBooks; i++) {
+                    const bookDiv = document.createElement('div');
+                    bookDiv.className = 'book-item';
+                    bookDiv.style.animation = `fallIn 0.5s ease-out ${i * 0.1}s forwards`;
+                    bookDiv.innerHTML = `
+                        <svg width="60" height="18" viewBox="0 0 60 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="1" y="1" width="58" height="16" rx="2" fill="#F5DEB3" stroke="#BC8F8F" stroke-width="1"/>
+                          <rect x="4" y="4" width="52" height="10" rx="1" fill="#FFF" stroke="#BC8F8F" stroke-width="0.5"/>
+                          <rect x="6" y="6" width="48" height="6" rx="0.5" fill="#DEB887"/>
+                          <line x1="8" y1="6" x2="8" y2="12" stroke="#BC8F8F" stroke-width="0.5"/>
+                          <line x1="52" y1="6" x2="52" y2="12" stroke="#BC8F8F" stroke-width="0.5"/>
+                        </svg>
+                    `;
+                    bookStack.appendChild(bookDiv);
+                }
+            }
+            const totalBooksElement = document.getElementById('totalBooks');
+            if (totalBooksElement) {
+                totalBooksElement.textContent = totalBooks;
+            }
+        }
+
+        // 清理旧的用户数据存储格式（兼容性）
+        function cleanupOldData() {
+            // 如果存在旧的全局userData，清理掉以避免冲突
+            if (localStorage.getItem('userData')) {
+                console.log('Cleaning up old userData format...');
+                localStorage.removeItem('userData');
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAuth()) return;
+            
+            // 清理旧数据
+            cleanupOldData();
+            
+            // 显示用户信息
+            displayUserInfo();
+            
+            loadUserData();
+            updateYearSelector();
+            updateMonthSelector();
+            generateCalendar(currentYear, currentMonth);
+            
+            const today = new Date().toISOString().split('T')[0];
+            selectDate(today);
+            updateBookDisplay();
+        });
+    </script>
+</body>
+</html>

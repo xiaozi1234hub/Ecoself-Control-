@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>关于我们 - Ecoself-Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFF5F2;
+            --secondary-color: #D4A784;
+            --accent-color: #946B54;
+            --text-color: #6B5A50;
+            --background-color: #FFFFFF;
+            --border-color: #F8EFEB;
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            --border-radius: 16px;
+            --transition-time: 0.3s;
+            --gradient-primary: linear-gradient(135deg, var(--background-color) 0%, var(--primary-color) 100%);
+            --quote-color: #B08B57;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--gradient-primary);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .nav {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all var(--transition-time);
+        }
+
+        .nav-list a:hover {
+            color: var(--accent-color);
+            background-color: var(--primary-color);
+        }
+
+        .content-section {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        h2 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.4rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            padding: 1.5rem;
+            background-color: var(--background-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .feature-item h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                padding: 2rem 0;
+            }
+
+            .nav-list {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .stat-item {
+            background-color: var(--background-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-item h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .stat-item p {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .feature-item {
+            padding: 2rem;
+            background-color: var(--background-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: all var(--transition-time);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-item h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+        }
+
+        .feature-item p {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .highlight-feature {
+            border: 2px solid var(--secondary-color);
+            position: relative;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 167, 132, 0.1);
+        }
+
+        .bonus-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .highlight-feature:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(212, 167, 132, 0.15);
+        }
+
+        .reward-cards {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .reward-card {
+            flex: 1;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .reward-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .reward-card p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+        }
+
+        .reward-card .note {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+            margin-top: 1rem;
+        }
+
+        .inspiring-quote {
+            text-align: center;
+            color: var(--quote-color);
+            margin: 4rem auto 2rem;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            padding: 1.5rem 2rem;
+            font-weight: 500;
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            letter-spacing: 0.02em;
+            max-width: 700px;
+            white-space: normal;
+            font-style: normal;
+            display: block;
+        }
+
+        .inspiring-quote::before,
+        .inspiring-quote::after {
+            display: none;
+        }
+
+        .inspiring-quote span {
+            display: inline;
+            font-size: inherit;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .inspiring-quote {
+                font-size: 0.95rem;
+                white-space: normal;
+                line-height: 2;
+                padding: 1rem;
+            }
+        }
+
+        .why-img {
+            width: 40%;
+            display: block;
+            margin: 1rem auto;
+            border-radius: var(--border-radius);
+        }
+
+        .row-horizontal {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .row-img-wrap {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .row-img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            object-fit: contain;
+        }
+
+        .img-caption {
+            margin-top: 0.5rem;
+            color: #946B54;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        @media (max-width: 800px) {
+            .row-horizontal {
+                flex-direction: column;
+                align-items: center;
+            }
+            .row-img {
+                max-width: 95vw;
+            }
+        }
+
+        .left-img-wrap {
+            margin-top: 4rem;
+        }
+
+        .three-img-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .three-img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            object-fit: cover;
+        }
+
+        @media (max-width: 900px) {
+            .three-img-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .three-img {
+                max-width: 95vw;
+            }
+        }
+
+        .four-img-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1.2rem;
+            margin: 2rem 0;
+        }
+
+        .four-img {
+            width: 100%;
+            max-width: 220px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            object-fit: cover;
+        }
+
+        @media (max-width: 1100px) {
+            .four-img-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .four-img {
+                max-width: 95vw;
+            }
+        }
+
+        .double-row-imgs {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .img-row {
+            display: flex;
+            flex-direction: row;
+            gap: 1.2rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .row-img {
+            width: 220px;
+            max-width: 30vw;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            background: #f8f8f8;
+        }
+
+        @media (max-width: 900px) {
+            .img-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .row-img {
+                max-width: 95vw;
+                width: 95vw;
+            }
+        }
+
+        .custom-3img-block {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            margin: 2.5rem 0 2rem 0;
+        }
+        .custom-3img-left {
+            display: flex;
+            align-items: center;
+        }
+        .custom-3img-main {
+            width: 320px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+        }
+        .custom-3img-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 400px;
+            gap: 1.2rem;
+        }
+        .custom-3img-side {
+            width: 320px;
+            height: calc((400px - 1.2rem) / 2);
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+        }
+        @media (max-width: 900px) {
+            .custom-3img-block {
+                flex-direction: column;
+                align-items: center;
+            }
+            .custom-3img-main, .custom-3img-side {
+                width: 95vw;
+                max-width: 95vw;
+                height: auto;
+            }
+            .custom-3img-right {
+                height: auto;
+                flex-direction: row;
+                gap: 1.2rem;
+                margin-top: 1rem;
+            }
+        }
+
+        .two-img-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+        .two-img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            object-fit: cover;
+        }
+        @media (max-width: 800px) {
+            .two-img-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .two-img {
+                max-width: 95vw;
+            }
+        }
+        /* Login按钮样式 */
+        .login-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(148, 107, 84, 0.4) !important;
+            background: #B08B57 !important;
+        }
+        
+        .login-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Ecoself-Control</div>
+            <p>Make every day meaningful</p>
+        </header>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="calendar.html">Todo List</a></li>
+            </ul>
+        </nav>
+
+        <section class="content-section">
+            <h2 style="text-align: center; color: #946B54; margin-bottom: 2rem;">🌟 How to Use Our Website 🌟</h2>
+            <div style="background: linear-gradient(135deg, #FFF5F2 0%, #F8EFEB 100%); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; border: 2px dashed #D4A784;">
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <span style="background: #D4A784; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;">1</span>
+                        <span style="font-size: 1.1em; color: #6B5A50;">You can scroll down and see the small comic on our website to learn about our original intention. 📖</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <span style="background: #B08B57; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;">2</span>
+                        <span style="font-size: 1.1em; color: #6B5A50;">Click on the "Login" button below the comic to log in. 🚀</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <span style="background: #946B54; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;">3</span>
+                        <span style="font-size: 1.1em; color: #6B5A50;">Make your own to-do list to donate books!!!!! ✨</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+                <div style="font-size: 3rem; color: #D4A784; margin-bottom: 1rem;">⬇️</div>
+                <h2 style="color: #946B54; margin-bottom: 2rem;">In the <strong style="font-size: 1.2em;">to-do list</strong>, you can:</h2>
+            </div>
+            
+            <div class="reward-cards">
+                <div class="reward-card">
+                    <div style="text-align:center;font-weight:600;font-size:1.1rem;margin-bottom:0.7rem;">Daily task</div>
+                    <h3>When you complete all the tasks on the list every day, you can accumulate and donate 5 books for the children in the mountainous areas. These books are those that the founder of the website and her friends no longer needed and that were well-preserved. If you fail to complete all the tasks, you will not be able to accumulate.</h3>
+                </div>
+                <div class="reward-card">
+                    <div style="text-align:center;font-weight:600;font-size:1.1rem;margin-bottom:0.7rem;">Extra bonus</div>
+                    <h3>An additional reward of 5 books will be given for consistently completing all tasks for 7 consecutive days. If the number of consecutive days is interrupted, the calculation will be recalculated</h3>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Why do we do this？</h2>
+            <div class="custom-3img-block">
+                <div class="custom-3img-left">
+                    <img src="images/WechatIMG794.jpg" alt="WechatIMG794" class="custom-3img-main">
+                </div>
+                <div class="custom-3img-right">
+                    <img src="images/guizhou3.jpeg" alt="guizhou3" class="custom-3img-side">
+                    <img src="images/guizhou2.jpeg" alt="guizhou2" class="custom-3img-side">
+                </div>
+            </div>
+            <p>That day, a high school student who often felt anxious and irritable due to the low efficiency of her studies in big cities walked into a dilapidated school in the deep mountains of Guizhou. She originally wanted to escape the suffocating feeling brought by the "rat race" and go into the deep mountains to experience perhaps a more simple lifestyle...
+            
+</p>
+
+            <div class="double-row-imgs">
+                <div class="img-row">
+                    <img src="images/WechatIMG795.jpg" alt="Comic 1" class="row-img">
+                    <img src="images/WechatIMG796.jpg" alt="Comic 2" class="row-img">
+                    <img src="images/WechatIMG797.jpg" alt="Comic 3" class="row-img">
+                </div>
+                <div class="img-row">
+                    <img src="images/guizhou5.jpeg" alt="Photo 1" class="row-img">
+                    <img src="images/IMG_5368.JPG" alt="Photo 2" class="row-img">
+                    <img src="images/d7f60f01d1c9ee90dcd6649eccbc76de.jpeg" alt="Photo 3" class="row-img">
+                </div>
+            </div>
+
+            <p>
+              The density of mosquitoes in the tiny toilet is beyond description. The so-called blackboard is merely a thin layer of putty pasted on top. The cramped teaching building houses all the children from kindergarten to the third year of junior high school. Their hands, which should be tender and smooth, are covered with blisters accumulated from long-term farm work.
+            </p>
+            <div class="two-img-row">
+                <img src="images/WechatIMG792.jpg" alt="Campus Life 1" class="two-img">
+                <img src="images/WechatIMG793.jpg" alt="Campus Life 2" class="two-img">
+            </div>
+            <p>
+              When the astonishing scenes of life before one's eyes keep emerging one after another, a pair of eyes that hold back tears out of genuine heartache meet a pair of clean and strong eyes that still have beautiful expectations for the outside world despite having experienced the vicissitudes of life early on.<br>
+              The meaning of this website is thus born~
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2>We hope</h2>
+            <p>
+              Through this website, we aim to help teenagers like her who are under increasing study pressure every day due to failing to complete their plans. Moreover, through the efforts of these teenagers, we strive to assist the children in the mountains!
+            </p>
+        </section>
+
+        <div class="inspiring-quote" style="text-align: center;">
+            <a href="login.html" class="login-btn" style="display: inline-block; background: #946B54; color: white; padding: 1rem 2rem; border-radius: 25px; text-decoration: none; font-size: 1.2rem; font-weight: 600; box-shadow: 0 4px 16px rgba(148, 107, 84, 0.3); transition: all 0.3s ease; border: none; cursor: pointer;">
+                Login
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">
+            <p>&copy; 2024 Ecoself-Control. All rights reserved.</p>
+            <p>ICP License: xxxxxxxx</p>
+        </div>
+    </footer>
+
+    <script>
+        // 获取当前用户信息并更新页面
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const navList = document.querySelector('.nav-list');
+            
+            if (currentUser) {
+                // 更新导航栏
+                const loginLink = navList.querySelector('a[href="login.html"]');
+                if (loginLink) {
+                    loginLink.textContent = 'Logout';
+                    loginLink.href = '#';
+                    loginLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        localStorage.removeItem('currentUser');
+                        window.location.href = 'login.html';
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
